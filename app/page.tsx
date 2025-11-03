@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import HeaderHero from './components/HeaderHero';
 import ProjectCard from './components/ProjectCard';
 
 export default function Home() {
@@ -21,11 +22,15 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black">
+    <div className="min-h-screen bg-gradient-to-br from-white to-blue-50 font-sans dark:from-black dark:to-zinc-900">
       <main className="container mx-auto px-4 py-16">
-        <h1 className="text-4xl font-bold text-center mb-12 text-zinc-900 dark:text-zinc-100">
+        {/* Section Présentation */}
+        <HeaderHero />
+
+        {/* Section Projets */}
+        <h2 className="text-4xl font-bold text-center mb-12 text-zinc-900 dark:text-zinc-100" id="projets">
           Mes Projets
-        </h1>
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
             <ProjectCard
