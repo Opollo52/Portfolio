@@ -1,7 +1,59 @@
-import React from 'react';
+"use client";
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 
 export default function AboutSection() {
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const badgeRef = useRef<HTMLDivElement | null>(null);
+  const [transformStyle, setTransformStyle] = useState<string>('perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)');
+  const [badgeTransform, setBadgeTransform] = useState<string>('perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)');
+  const [transition, setTransition] = useState<string>('transform 400ms cubic-bezier(.03,.98,.52,.99)');
+  const [badgeTransition, setBadgeTransition] = useState<string>('transform 400ms cubic-bezier(.03,.98,.52,.99)');
+
+  function handleMove(e: React.MouseEvent) {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const dx = (x - cx) / cx;
+    const dy = (y - cy) / cy;
+    const rotateY = dx * 8;
+    const rotateX = -dy * 8;
+    const translateZ = 20;
+    setTransformStyle(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${translateZ}px)`);
+    setTransition('transform 120ms linear');
+  }
+
+  function handleLeave() {
+    setTransformStyle('perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)');
+    setTransition('transform 600ms cubic-bezier(.2,.8,.2,1)');
+  }
+
+  function handleBadgeMove(e: React.MouseEvent) {
+    const el = badgeRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const dx = (x - cx) / cx;
+    const dy = (y - cy) / cy;
+    const rotateY = dx * 10;
+    const rotateX = -dy * 10;
+    const translateZ = 15;
+    setBadgeTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(${translateZ}px)`);
+    setBadgeTransition('transform 120ms linear');
+  }
+
+  function handleBadgeLeave() {
+    setBadgeTransform('perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)');
+    setBadgeTransition('transform 600ms cubic-bezier(.2,.8,.2,1)');
+  }
+
   return (
     <section className="py-20 bg-zinc-50 dark:bg-zinc-900" id="about">
       <div className="container mx-auto px-4">
@@ -74,15 +126,30 @@ export default function AboutSection() {
           
           <div className="lg:w-1/2 relative">
             <div className="aspect-square w-full max-w-md mx-auto relative">
-              <Image
-                src="/about.jpg"
-                alt="Photo de profil en situation de travail"
-                width={500}
-                height={500}
-                className="rounded-2xl object-cover shadow-xl"
-                priority
-              />
-              <div className="absolute -bottom-6 -right-6 bg-blue-500 text-white p-4 rounded-xl shadow-lg">
+              <div
+                ref={cardRef}
+                onMouseMove={handleMove}
+                onMouseLeave={handleLeave}
+                style={{ transform: transformStyle, transition }}
+                className="rounded-2xl shadow-xl overflow-hidden will-change-transform"
+              >
+                <div className="absolute -right-8 -top-8 w-96 h-96 rounded-2xl bg-gradient-to-br from-blue-200/60 to-white/30 filter blur-3xl opacity-80 pointer-events-none"></div>
+                <Image
+                  src="/about.jpg"
+                  alt="Photo de profil en situation de travail"
+                  width={500}
+                  height={500}
+                  className="object-cover w-full h-full"
+                  priority
+                />
+              </div>
+              <div
+                ref={badgeRef}
+                onMouseMove={handleBadgeMove}
+                onMouseLeave={handleBadgeLeave}
+                style={{ transform: badgeTransform, transition: badgeTransition }}
+                className="absolute -bottom-6 -right-6 bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-xl shadow-lg will-change-transform cursor-pointer"
+              >
                 <div className="text-2xl font-bold">2+</div>
                 <div className="text-sm">Années d'études en développement</div>
               </div>

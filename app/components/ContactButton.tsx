@@ -2,11 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Button = () => {
+  const mailto =
+    'mailto:eliottpissis@gmail.com?subject=' +
+    encodeURIComponent('Contact depuis le portfolio') +
+    '&body=' +
+    encodeURIComponent('Bonjour Eliott,\n\nJe vous contacte au sujet de ...');
+
   return (
     <StyledWrapper>
-      <button className="button">
+      <a href={mailto} className="button" role="button">
         Me contacter
-      </button>
+      </a>
     </StyledWrapper>
   );
 }
