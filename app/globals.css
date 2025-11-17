@@ -1,26 +1,295 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Theme variables (default: Ocean palette from image: deep navy → steel → teal) */
+:root,
+[data-theme="ocean"] {
+  /* Base */
+  --background: #0b1324; /* deep navy (left swatch) */
+  --foreground: #e6f0ff; /* soft off-white */
+  --muted: #9bb3c9; /* desaturated slate text */
+  --panel: rgba(255, 255, 255, 0.04);
+  --panel-hover: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+
+  /* Brand (teal/blue family from the palette) */
+  --primary: #59c7c0; /* teal (right swatch) */
+  --primary-2: #78d9d3; /* lighter teal for gradient end */
+  --accent: #3c556a; /* steel blue (middle swatch) */
+  --accent-2: #16243a; /* midnight blue (second swatch) */
+
+  /* Gradient anchors */
+  --grad-start: var(--primary);
+  --grad-end: var(--primary-2);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Sunset theme: warm alternative (kept for future use) */
+[data-theme="sunset"] {
+  --background: #141016; /* muted plum/black */
+  --foreground: #fff1e6;
+  --muted: #d6c1ba;
+  --panel: rgba(255, 255, 255, 0.05);
+  --panel-hover: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.1);
+
+  --primary: #f97316; /* orange */
+  --primary-2: #ef4444; /* red */
+  --accent: #a78bfa; /* soft violet */
+  --accent-2: #fb7185; /* rose */
+
+  --grad-start: var(--primary);
+  --grad-end: var(--accent);
 }
 
-@media (prefers-color-scheme: dark) {
+/* Nord theme: cool alternative (kept for future use) */
+[data-theme="nord"] {
+  --background: #0b1115; /* dark slate */
+  --foreground: #e5e9f0;
+  --muted: #a7b1c2;
+  --panel: rgba(255, 255, 255, 0.04);
+  --panel-hover: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+
+  --primary: #88c0d0; /* frost cyan */
+  --primary-2: #b48ead; /* aurora purple */
+  --accent: #a3be8c; /* green */
+  --accent-2: #81a1c1; /* desat blue */
+
+  --grad-start: var(--primary);
+  --grad-end: var(--primary-2);
+}
+
+/* Optional light-mode mapping for system preference */
+@media (prefers-color-scheme: light) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #f7fafc;
+    --foreground: #0a0a0a;
+    --muted: #4b5563;
+    --panel: rgba(0, 0, 0, 0.03);
+    --panel-hover: rgba(0, 0, 0, 0.06);
+    --border: rgba(0, 0, 0, 0.08);
   }
 }
 
 body {
-  background: var(--background);
+  background: transparent; /* fixed background layer handles painting */
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Fixed site background: primary dark gradient with subtle inner white glow */
+.site-fixed-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0; /* base layer; content will be z>0 */
+  pointer-events: none;
+  background: 
+    /* Inner white glows (even more pronounced) */
+    radial-gradient(ellipse at 50% 28%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 60%),
+    radial-gradient(ellipse at 78% 12%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 50%),
+    radial-gradient(ellipse at 30% 70%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 45%),
+    /* Teal/Cyan ambient blobs (stronger but tasteful) */
+    radial-gradient(660px 440px at 15% 25%, rgba(34,211,238,0.18) 0%, rgba(34,211,238,0) 64%),
+    radial-gradient(780px 500px at 85% 30%, rgba(45,212,191,0.16) 0%, rgba(45,212,191,0) 69%),
+    radial-gradient(560px 420px at 35% 80%, rgba(56,189,248,0.14) 0%, rgba(56,189,248,0) 64%),
+    /* Vertical soft highlight at top/bottom */
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 25%, rgba(255,255,255,0) 75%, rgba(255,255,255,0.04) 100%),
+    /* Base navy gradient */
+    linear-gradient(135deg, #0f1a2e 0%, #102038 100%);
+  background-repeat: no-repeat;
+  /* Gentle vignette to frame content */
+  box-shadow:
+    inset 0 0 280px rgba(0,0,0,0.50),
+    inset 0 0 200px rgba(255,255,255,0.08);
+}
+
+/* Animations globales */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Classes utilitaires */
+.glass-effect {
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+}
+
+.gradient-text {
+  background-image: linear-gradient(90deg, var(--grad-start) 0%, var(--grad-end) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.floating {
+  animation: float 6s ease-in-out infinite;
+}
+
+.pulse-glow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+
+/* Marquee animations pour la section compétences (boucle fluide) */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 200%; /* Deux fois pour boucle continue */
+  will-change: transform;
+  gap: 0.75rem; /* espace uniforme */
+  padding: 0.25rem 0; /* réduire risque de "saut" visuel */
+}
+.marquee-row {
+  overflow: hidden;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+.marquee-row[data-direction="left"] .marquee-track {
+  animation: marquee 32s linear infinite;
+}
+.marquee-row[data-direction="right"] .marquee-track {
+  animation: marquee 30s linear infinite reverse;
+}
+.marquee-row.fast[data-direction="left"] .marquee-track {
+  animation-duration: 26s;
+}
+.marquee-row.fast[data-direction="right"] .marquee-track {
+  animation-duration: 24s;
+}
+
+.skill-badge-marquee {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem; /* légèrement plus d'espace */
+  padding: 0.65rem 1.4rem; /* agrandir le badge */
+  border-radius: 9999px; /* full */
+  font-size: 0.95rem; /* un peu plus grand */
+  font-weight: 500; /* medium */
+  color: #ffffff;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.10);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  white-space: nowrap; /* jamais sur deux lignes */
+}
+.skill-badge-marquee:hover {
+  border-color: rgba(34,211,238,0.5); /* cyan-400/50 */
+  color: #67e8f9; /* cyan-300 */
+}
+.skill-badge-marquee:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(34,211,238,0.4);
+}
+
+/* Suppression de la pause au survol: les lignes défilent en continu */
+.skill-badge-marquee::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--grad-start), var(--grad-end));
+  box-shadow: 0 0 8px var(--grad-start);
+}
+
+/* Option pour masquer le point décoratif si une icône est utilisée */
+.skill-badge-marquee.no-dot::before { display: none; }
+
+/* Classes Tailwind personnalisées */
+.bg-size-200 {
+  background-size: 200% 200%;
+}
+
+.bg-pos-100 {
+  background-position: 100% 0;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Themed button glow utility */
+.btn-glow {
+  position: relative;
+  z-index: 0; /* create stacking context for pseudo */
+}
+.btn-glow::after {
+  content: "";
+  position: absolute;
+  inset: -4px; /* extend glow beyond button (more subtle) */
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--grad-start), var(--grad-end));
+  filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: -1; /* behind element to avoid covering content */
+  pointer-events: none;
+}
+.btn-glow:hover::after,
+.btn-glow:focus-visible::after {
+  opacity: 0.22;
+}
+
+/* Extra aura using box-shadow and drop-shadows (not clipped by overflow) */
+.btn-glow:hover,
+.btn-glow:focus-visible {
+  box-shadow: 0 0 3px var(--grad-start), 0 0 8px var(--grad-end);
+  filter: drop-shadow(0 0 2px var(--grad-start)) drop-shadow(0 0 4px var(--grad-end));
+}
+
+/* White, very subtle glow variant */
+.btn-glow--white {
+  position: relative;
+  z-index: 0;
+}
+.btn-glow--white::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  background: #ffffff;
+  filter: blur(7px);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+.btn-glow--white:hover::after,
+.btn-glow--white:focus-visible::after {
+  opacity: 0.18;
+}
+.btn-glow--white:hover,
+.btn-glow--white:focus-visible {
+  box-shadow: 0 0 4px rgba(255,255,255,0.22), 0 0 10px rgba(255,255,255,0.16);
+  filter: drop-shadow(0 0 2px rgba(255,255,255,0.18));
 }

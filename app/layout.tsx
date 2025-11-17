@@ -23,11 +23,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr" data-theme="ocean">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased scroll-smooth`}
       >
-        {children}
+        {/* Fixed background (does not scroll) */}
+        <div aria-hidden className="site-fixed-bg" />
+        {/* Content layer above fixed bg */}
+        <div className="relative z-10">
+          {children}
+        </div>
       </body>
     </html>
   );

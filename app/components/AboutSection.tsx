@@ -55,14 +55,14 @@ export default function AboutSection() {
   }
 
   return (
-    <section className="py-20 bg-zinc-50 dark:bg-zinc-900" id="about">
+    <section className="py-20 relative z-10" id="about">
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row items-center gap-12">
-          <div className="lg:w-1/2">
-            <h2 className="text-4xl font-bold mb-6 text-zinc-900 dark:text-zinc-100">
+          <div className="lg:w-1/2 relative z-10 lg:ml-6 xl:ml-20">
+            <h2 className="text-5xl font-bold mb-6 gradient-text">
               À Propos de Moi
             </h2>
-            <div className="space-y-4 text-zinc-600 dark:text-zinc-300">
+            <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
               <p>
                 Je suis un étudiant développeur web passionné, actuellement en 2ème année à SUPINFO Caen.
                 Mon parcours m'a permis d'acquérir une solide base en développement web moderne, avec une
@@ -80,15 +80,15 @@ export default function AboutSection() {
               </p>
             </div>
             
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-10 flex flex-wrap gap-4">
               <a
                 href="/cv.pdf"
                 target="_blank"
-                className="inline-flex items-center gap-2 bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition"
+                className="inline-flex items-center gap-3 bg-gradient-to-r from-[var(--grad-start)] to-[var(--grad-end)] text-white px-8 py-4 rounded-full hover:shadow-2xl transition-all duration-300 hover:scale-105 font-semibold btn-glow--white"
               >
                 <span>Télécharger mon CV</span>
                 <svg
-                  className="w-5 h-5"
+                  className="w-5 h-5 transition-transform group-hover:translate-y-1"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -106,7 +106,7 @@ export default function AboutSection() {
                 href="https://github.com/Opollo52"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-zinc-800 text-white px-6 py-3 rounded-full hover:bg-zinc-700 transition"
+                className="inline-flex items-center gap-3 glass-effect text-white px-8 py-4 rounded-full hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-white/20 hover:border-cyan-400/50 font-semibold"
               >
                 <span>GitHub</span>
                 <svg
@@ -131,15 +131,22 @@ export default function AboutSection() {
                 onMouseMove={handleMove}
                 onMouseLeave={handleLeave}
                 style={{ transform: transformStyle, transition }}
-                className="rounded-2xl shadow-xl overflow-hidden will-change-transform"
+                className="rounded-3xl glass-effect border-2 border-white/20 shadow-2xl overflow-hidden will-change-transform backdrop-blur-xl"
               >
-                <div className="absolute -right-8 -top-8 w-96 h-96 rounded-2xl bg-gradient-to-br from-blue-200/60 to-white/30 filter blur-3xl opacity-80 pointer-events-none"></div>
+                {/* Effets de gradient animés */}
+                <div className="absolute -right-8 -top-8 w-48 h-48 rounded-full bg-gradient-to-br from-cyan-400/40 to-sky-400/40 filter blur-2xl opacity-60 pointer-events-none floating"></div>
+                <div className="absolute -left-8 -bottom-8 w-56 h-56 rounded-full bg-gradient-to-tr from-teal-400/30 to-sky-400/30 filter blur-2xl opacity-50 pointer-events-none floating" style={{animationDelay: '2s'}}></div>
+                
+                {/* Overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-[#1b2a43]/20 pointer-events-none"></div>
+                
                 <Image
-                  src="/about.jpg"
+                  src="/about.svg"
                   alt="Photo de profil en situation de travail"
                   width={500}
                   height={500}
-                  className="object-cover w-full h-full"
+                  unoptimized
+                  className="object-cover w-full h-full relative z-10"
                   priority
                 />
               </div>
@@ -148,10 +155,10 @@ export default function AboutSection() {
                 onMouseMove={handleBadgeMove}
                 onMouseLeave={handleBadgeLeave}
                 style={{ transform: badgeTransform, transition: badgeTransition }}
-                className="absolute -bottom-6 -right-6 bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-xl shadow-lg will-change-transform cursor-pointer"
+                className="absolute bottom-10 right-6 z-20 bg-gradient-to-r from-[var(--grad-start)] via-cyan-400 to-[var(--grad-end)] text-white p-6 rounded-2xl shadow-2xl will-change-transform cursor-pointer border border-white/20"
               >
-                <div className="text-2xl font-bold">2+</div>
-                <div className="text-sm">Années d'études en développement</div>
+                <div className="text-3xl font-bold text-white">2+</div>
+                <div className="text-sm font-medium text-gray-200">Années d'études en développement</div>
               </div>
             </div>
           </div>

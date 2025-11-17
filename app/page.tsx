@@ -27,21 +27,26 @@ export default function Home() {
   ];
 
   return (
-    <div id="home" className="min-h-screen bg-gradient-to-br from-white to-blue-50 font-sans dark:from-black dark:to-zinc-900">
+    <div id="home" className="min-h-screen font-sans">
       <Navbar />
       <main className="pt-16">
         {/* Hero Section */}
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 relative min-h-[calc(100vh-64px)] flex items-center">
           <HeaderHero />
         </div>
 
         {/* Projects Section */}
-        <section className="py-20" id="projects">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-12 text-zinc-900 dark:text-zinc-100">
+        <section className="py-24 relative" id="projects">
+          <div className="container mx-auto px-4 relative z-10 max-w-6xl">
+            <h2 className="text-5xl font-bold text-center mb-4 gradient-text">
               Mes Projets
             </h2>
-            <div className="max-w-5xl mx-auto">
+            {/* Barre soulignée sur le thème pour harmoniser avec les autres sections */}
+            <div className="mx-auto h-1 w-24 bg-gradient-to-r from-[var(--grad-start)] to-[var(--grad-end)] rounded-full mb-8" />
+            <p className="text-xl text-center text-gray-300/90 mb-16 max-w-2xl mx-auto">
+              Découvrez mes réalisations les plus récentes, alliant créativité et expertise technique
+            </p>
+            <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 justify-items-center">
                 {projects.map((project, index) => (
                   <ProjectCard
@@ -55,17 +60,25 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <AboutSection />
+        <div className="relative">
+          <AboutSection />
+        </div>
 
         {/* Skills Section */}
-        <SkillsSection />
+        <div className="relative">
+          <SkillsSection />
+        </div>
 
         {/* Contact Section */}
-        <ContactSection />
+        <div className="relative">
+          <ContactSection />
+        </div>
       </main>
 
       {/* Footer */}
-      <Footer />
+      <div>
+        <Footer />
+      </div>
     </div>
   );
 }
